@@ -27,8 +27,8 @@ class Fudan:
         self.session.headers['User-Agent'] = self.UA
         self.url_login = url_login
 
-        self.uid = uid
-        self.psw = psw
+        self.uid = "18307130093"
+        self.psw = "175078Tb!@#"
 
     def _page_init(self):
         """
@@ -129,23 +129,27 @@ class Zlapp(Fudan):
         get_info = self.session.get(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
         last_info = get_info.json()
+        #print(last_info)
 
-        print("◉上一次提交日期为:", last_info["d"]["info"]["date"])
+        print("◉上一次提交日期为:", last_info["d"]["oldInfo"]["date"])
 
-        position = last_info["d"]["info"]['geo_api_info']
-        position = json_loads(position)
+        #position = last_info["d"]["info"]['geo_api_info']
 
-        print("◉上一次提交地址为:", position['formattedAddress'])
+        #print("do you fuck,",last_info["d"]["info"]['geo_api_info'])
+
+        #position = json_loads(position)
+
+        #print("◉上一次提交地址为:", position['formattedAddress'])
         # print("◉上一次提交GPS为", position["position"])
 
         today = time.strftime("%Y%m%d", time.localtime())
 
-        if last_info["d"]["info"]["date"] == today:
+        if last_info["d"]["oldInfo"]["date"] == today:
             print("\n*******今日已提交*******")
             self.close()
         else:
             print("\n\n*******未提交*******")
-            self.last_info = last_info["d"]["info"]
+            self.last_info = last_info["d"]["oldInfo"]
 
     def checkin(self):
         """
@@ -161,18 +165,18 @@ class Zlapp(Fudan):
 
         print("\n\n◉◉提交中")
 
-        geo_api_info = json_loads(self.last_info["geo_api_info"])
-        province = geo_api_info["addressComponent"].get("province", "")
-        city = geo_api_info["addressComponent"].get("city", "")
-        district = geo_api_info["addressComponent"].get("district", "")
-        self.last_info.update(
+        #geo_api_info = json_loads(self.last_info["geo_api_info"])
+        #province = geo_api_info["addressComponent"].get("province", "")
+        #city = geo_api_info["addressComponent"].get("city", "")
+        #district = geo_api_info["addressComponent"].get("district", "")
+        """self.last_info.update(
                 {
                     "tw"      : "13",
                     "province": province,
                     "city"    : city,
                     "area"    : " ".join((province, city, district))
                 }
-        )
+        )"""
 
         save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
